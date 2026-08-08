@@ -1,0 +1,14 @@
+<Solution>
+  <Folder Name="/Docs/">
+    <File Path="docs/v1.json" />
+  </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="tests/MagicWise.Core.Tests/MagicWise.Core.Tests.csproj" />
+    <Project Path="tests/MagicWise.Desktop.Tests/MagicWise.Desktop.Tests.csproj" />
+    <Project Path="tests/MagicWise.EndToEnd.Tests/MagicWise.EndToEnd.Tests.csproj" />
+    <Project Path="tests/MagicWise.Integrations.Tests/MagicWise.Integrations.Tests.csproj" />
+  </Folder>
+  <Project Path="MagicWise.Core/MagicWise.Core.csproj" />
+  <Project Path="MagicWise.Desktop/MagicWise.Desktop.csproj" />
+  <Project Path="MagicWise.Integrations/MagicWise.Integrations.csproj" />
+</Solution>
