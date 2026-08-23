@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 
 namespace MagicWise.Integrations.V1.Models;
 
@@ -10,3 +10,4 @@ public class ParkDto
     [JsonPropertyName("name")]
     public string Name { get; set; } = null!;
 }
+

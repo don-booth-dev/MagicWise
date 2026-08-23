@@ -9,6 +9,7 @@
     <Project Path="tests/MagicWise.Integrations.Tests/MagicWise.Integrations.Tests.csproj" />
   </Folder>
   <Project Path="MagicWise.Core/MagicWise.Core.csproj" />
+  <Project Path="MagicWise.Data/MagicWise.Data.csproj" />
   <Project Path="MagicWise.Desktop/MagicWise.Desktop.csproj" />
   <Project Path="MagicWise.Integrations/MagicWise.Integrations.csproj" />
 </Solution>

@@ -1,0 +1,125 @@
+<UserControl x:Class="MagicWise.Desktop.Views.SettingsPageView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:MagicWise.Desktop.ViewModels">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" Padding="16,12,16,12"
+                BorderThickness="0,0,0,1"
+                BorderBrush="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}">
+            <TextBlock Text="⚙ Settings"
+                       FontSize="20"
+                       FontWeight="SemiBold" />
+        </Border>
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="16">
+            <StackPanel>
+
+                <!-- Loading indicator -->
+                <ProgressBar IsIndeterminate="True"
+                             Height="3"
+                             Margin="0,0,0,12"
+                             Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}" />
+
+                <!-- Tag Categories -->
+                <TextBlock Text="Tags &amp; Filters"
+                           FontSize="16"
+                           FontWeight="SemiBold"
+                           Margin="0,0,0,8" />
+
+                <ItemsControl ItemsSource="{Binding Categories}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type vm:SettingsTagCategoryViewModel}">
+                            <Border BorderThickness="1"
+                                    BorderBrush="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}"
+                                    CornerRadius="4"
+                                    Margin="0,0,0,12"
+                                    Padding="12">
+                                <StackPanel>
+                                    <!-- Category header -->
+                                    <TextBlock Text="{Binding Name}"
+                                               FontSize="14"
+                                               FontWeight="SemiBold"
+                                               Margin="0,0,0,8" />
+
+                                    <!-- Tag list -->
+                                    <ItemsControl ItemsSource="{Binding Tags}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate DataType="{x:Type vm:SettingsTagViewModel}">
+                                                <Grid Margin="0,2,0,2">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBox Grid.Column="0"
+                                                             Text="{Binding Name, UpdateSourceTrigger=LostFocus}"
+                                                             BorderThickness="0,0,0,1"
+                                                             Padding="2,2" />
+                                                    <Button Grid.Column="1"
+                                                            Content="✕"
+                                                            Command="{Binding DeleteCommand}"
+                                                            Margin="8,0,0,0"
+                                                            Padding="4,2"
+                                                            FontSize="11"
+                                                            ToolTip="Remove tag" />
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+
+                                    <!-- Add new tag -->
+                                    <Grid Margin="0,8,0,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBox Grid.Column="0"
+                                                 Text="{Binding NewTagName, UpdateSourceTrigger=PropertyChanged}"
+                                                 Padding="4,3">
+                                            <TextBox.Style>
+                                                <Style TargetType="TextBox">
+                                                    <Style.Resources>
+                                                        <VisualBrush x:Key="HintBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
+                                                            <VisualBrush.Visual>
+                                                                <TextBlock Text="New tag name…" Foreground="Gray" Margin="4,0,0,0" />
+                                                            </VisualBrush.Visual>
+                                                        </VisualBrush>
+                                                    </Style.Resources>
+                                                    <Style.Triggers>
+                                                        <Trigger Property="Text" Value="">
+                                                            <Setter Property="Background" Value="{StaticResource HintBrush}" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBox.Style>
+                                        </TextBox>
+                                        <Button Grid.Column="1"
+                                                Content="+ Add"
+                                                Command="{Binding AddTagCommand}"
+                                                Margin="8,0,0,0"
+                                                Padding="8,3" />
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <!-- App Preferences placeholder -->
+                <TextBlock Text="App Preferences"
+                           FontSize="16"
+                           FontWeight="SemiBold"
+                           Margin="0,8,0,8" />
+                <TextBlock Text="Additional preferences will appear here in a future update."
+                           Foreground="Gray"
+                           FontStyle="Italic" />
+
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 using MagicWise.Integrations.V1.Models.Enums;
 
 namespace MagicWise.Integrations.V1.Models;
@@ -20,6 +20,10 @@ public class EntityChildDto
     [JsonPropertyName("parentId")]
     public string? ParentId { get; set; }
 
+    [JsonPropertyName("slug")]
+    public string? Slug { get; set; }
+
     [JsonPropertyName("location")]
     public EntityLocationDto? Location { get; set; }
 }
+

@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using MagicWise.Integrations.V1.Models.Enums;
 
 namespace MagicWise.Integrations.V1.Models;
 
@@ -12,7 +13,7 @@ public class ScheduleDto
     public string? Name { get; set; }
 
     [JsonPropertyName("entityType")]
-    public string? EntityType { get; set; }
+    public EntityType? EntityType { get; set; }
 
     [JsonPropertyName("timezone")]
     public string? Timezone { get; set; }
@@ -23,3 +24,4 @@ public class ScheduleDto
     [JsonPropertyName("parks")]
     public List<ParkScheduleDto>? Parks { get; set; }
 }
+

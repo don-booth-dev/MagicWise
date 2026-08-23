@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using MagicWise.Integrations.V1.Models.Enums;
 
 namespace MagicWise.Integrations.V1.Models;
 
@@ -16,8 +17,9 @@ public class PricedScheduleEntryDto
     public DateTime ClosingTime { get; set; }
 
     [JsonPropertyName("type")]
-    public string Type { get; set; } = null!;
+    public PricedScheduleEntryType Type { get; set; }
 
     [JsonPropertyName("purchases")]
     public List<SchedulePriceObjectDto>? Purchases { get; set; }
 }
+
