@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace MagicWise.Integrations.V1.Models;
@@ -20,3 +20,4 @@ public class DestinationDto
     [JsonPropertyName("parks")]
     public List<ParkDto>? Parks { get; set; }
 }
+

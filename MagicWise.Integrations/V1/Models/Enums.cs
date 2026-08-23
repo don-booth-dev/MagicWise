@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 
 namespace MagicWise.Integrations.V1.Models.Enums;
 
@@ -20,6 +20,17 @@ public enum LiveStatusType
     DOWN,
     CLOSED,
     REFURBISHMENT
+}
+
+[JsonConverter(typeof(JsonStringEnumConverter))]
+public enum LiveQueueType
+{
+    STANDBY,
+    SINGLE_RIDER,
+    RETURN_TIME,
+    PAID_RETURN_TIME,
+    BOARDING_GROUP,
+    PAID_STANDBY
 }
 
 [JsonConverter(typeof(JsonStringEnumConverter))]
@@ -45,3 +56,23 @@ public enum SchedulePriceType
     PACKAGE,
     ATTRACTION
 }
+
+[JsonConverter(typeof(JsonStringEnumConverter))]
+public enum AttractionType
+{
+    RIDE,
+    TRANSPORT,
+    SHOW,
+    EXPERIENCE
+}
+
+[JsonConverter(typeof(JsonStringEnumConverter))]
+public enum PricedScheduleEntryType
+{
+    OPERATING,
+    TICKETED_EVENT,
+    PRIVATE_EVENT,
+    EXTRA_HOURS,
+    INFO
+}
+
