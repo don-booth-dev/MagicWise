@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 using MagicWise.Integrations.V1.Models.Enums;
 
 namespace MagicWise.Integrations.V1.Models;
@@ -20,3 +20,4 @@ public class SchedulePriceObjectDto
     [JsonPropertyName("available")]
     public bool? Available { get; set; }
 }
+

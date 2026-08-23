@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using MagicWise.Integrations.V1.Models.Enums;
 
@@ -21,3 +21,4 @@ public class ParkScheduleDto
     [JsonPropertyName("schedule")]
     public List<PricedScheduleEntryDto>? Schedule { get; set; }
 }
+

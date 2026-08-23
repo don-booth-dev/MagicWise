@@ -3,10 +3,81 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:MagicWise.Desktop"
+        xmlns:views="clr-namespace:MagicWise.Desktop.Views"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="MagicWise" Height="700" Width="1100"
+        MinHeight="480" MinWidth="700"
+        Icon="app.ico">
 
+    <Window.Resources>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <!-- Top bar -->
+            <RowDefinition Height="48" />
+            <!-- Main content -->
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- ═══ Top bar ═══ -->
+        <Border Grid.Row="0"
+                Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"
+                BorderThickness="0,0,0,1"
+                BorderBrush="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}">
+            <Grid Margin="8,0,8,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Hamburger + title -->
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button Content="☰"
+                            Command="{Binding TogglePanelCommand}"
+                            FontSize="18"
+                            Width="40" Height="36"
+                            BorderThickness="0"
+                            Background="Transparent"
+                            ToolTip="Toggle navigation panel" />
+                    <TextBlock Text="MagicWise"
+                               FontSize="18"
+                               FontWeight="SemiBold"
+                               VerticalAlignment="Center"
+                               Margin="8,0,0,0" />
+                </StackPanel>
+
+                <!-- Sign In placeholder (Google OAuth planned) -->
+                <Button Grid.Column="2"
+                        Content="{Binding UserDisplayName}"
+                        Padding="12,6"
+                        VerticalAlignment="Center"
+                        IsEnabled="False"
+                        ToolTip="Sign in with Google — coming soon" />
+            </Grid>
+        </Border>
+
+        <!-- ═══ Main content area ═══ -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <!-- Left panel (collapsible) -->
+                <ColumnDefinition x:Name="LeftPanelColumn" Width="300" MinWidth="0" />
+                <!-- Right panel -->
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Left panel -->
+            <Border Grid.Column="0"
+                    BorderThickness="0,0,1,0"
+                    BorderBrush="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}"
+                    ClipToBounds="True">
+                <views:ParkListView />
+            </Border>
+
+            <!-- Right panel — ContentControl auto-resolves page View from DataTemplate -->
+            <ContentControl Grid.Column="1"
+                            Content="{Binding CurrentPage}" />
+        </Grid>
     </Grid>
 </Window>
