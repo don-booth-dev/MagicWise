@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using MagicWise.Integrations.V1.Models.Enums;
 
@@ -27,6 +27,25 @@ public class EntityDto
     [JsonPropertyName("location")]
     public EntityLocationDto? Location { get; set; }
 
+    [JsonPropertyName("slug")]
+    public string? Slug { get; set; }
+
+    [JsonPropertyName("externalId")]
+    public string? ExternalId { get; set; }
+
+    [JsonPropertyName("parkId")]
+    public string? ParkId { get; set; }
+
+    [JsonPropertyName("attractionType")]
+    public AttractionType? AttractionType { get; set; }
+
+    [JsonPropertyName("minimumHeight")]
+    public int? MinimumHeight { get; set; }
+
+    [JsonPropertyName("mayGetWet")]
+    public bool? MayGetWet { get; set; }
+
     [JsonPropertyName("tags")]
     public List<TagDataDto>? Tags { get; set; }
 }
+

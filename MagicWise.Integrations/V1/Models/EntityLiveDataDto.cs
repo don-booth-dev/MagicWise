@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using MagicWise.Integrations.V1.Models.Enums;
@@ -16,6 +16,12 @@ public class EntityLiveDataDto
     [JsonPropertyName("entityType")]
     public EntityType EntityType { get; set; }
 
+    [JsonPropertyName("parkId")]
+    public string? ParkId { get; set; }
+
+    [JsonPropertyName("externalId")]
+    public string? ExternalId { get; set; }
+
     [JsonPropertyName("status")]
     public LiveStatusType? Status { get; set; }
 
@@ -32,5 +38,6 @@ public class EntityLiveDataDto
     public List<LiveShowTimeDto>? OperatingHours { get; set; }
 
     [JsonPropertyName("diningAvailability")]
-    public List<object>? DiningAvailability { get; set; } // flexible; map to typed DTO if desired
+    public List<DiningAvailabilityDto>? DiningAvailability { get; set; }
 }
+

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text.Json.Serialization;
 using MagicWise.Integrations.V1.Models.Enums;
 
@@ -21,3 +21,4 @@ public class LiveQueueBoardingGroupDto
     [JsonPropertyName("estimatedWait")]
     public int? EstimatedWait { get; set; }
 }
+

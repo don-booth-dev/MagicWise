@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace MagicWise.Integrations.V1.Models;
@@ -18,3 +18,4 @@ public class TagDataDto
     [JsonPropertyName("value")]
     public JsonElement? Value { get; set; }
 }
+
