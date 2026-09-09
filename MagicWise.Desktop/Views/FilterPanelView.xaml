@@ -7,7 +7,7 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate DataType="{x:Type vm:TagCategoryViewModel}">
                     <Expander Header="{Binding Name}"
-                              IsExpanded="True"
+                              IsExpanded="False"
                               Margin="0,2,0,2"
                               Visibility="{Binding IsVisible, Converter={StaticResource BoolToVisibilityConverter}}">
                         <ItemsControl ItemsSource="{Binding Tags}" Margin="12,4,0,4">
