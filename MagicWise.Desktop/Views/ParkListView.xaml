@@ -3,20 +3,42 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="clr-namespace:MagicWise.Desktop.ViewModels"
              xmlns:views="clr-namespace:MagicWise.Desktop.Views">
-    <Grid>
-        <Grid.RowDefinitions>
-            <!-- Search box -->
-            <RowDefinition Height="Auto" />
-            <!-- Filter panel -->
-            <RowDefinition Height="Auto" />
-            <!-- Park tree -->
-            <RowDefinition Height="*" />
-            <!-- Bottom navigation -->
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+    <DockPanel>
+        <!-- Bottom navigation (fixed at bottom) -->
+        <Border DockPanel.Dock="Bottom"
+                BorderThickness="0,1,0,0"
+                BorderBrush="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}"
+                Padding="4,6,4,6">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Content="🗺 Parks"
+                        Command="{Binding NavigateParksCommand}"
+                        Margin="4,0,4,0"
+                        Padding="10,4"
+                        MinWidth="80" />
+                <Button Content="⚙ Settings"
+                        Command="{Binding NavigateSettingsCommand}"
+                        Margin="4,0,4,0"
+                        Padding="10,4"
+                        MinWidth="80" />
+            </StackPanel>
+        </Border>
 
-        <!-- Search box -->
-        <TextBox Grid.Row="0"
+        <!-- Attribution (fixed at bottom, above buttons) -->
+        <Border DockPanel.Dock="Bottom"
+                BorderThickness="0,1,0,0"
+                BorderBrush="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}"
+                Padding="4,6,4,6"
+                Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
+            <TextBlock TextAlignment="Center" FontSize="12">
+                <Run Text="Powered by " />
+                <Hyperlink NavigateUri="https://www.themeparks.wiki/" RequestNavigate="Hyperlink_RequestNavigate" Foreground="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}">
+                    <Run Text="ThemeParks.wiki" />
+                </Hyperlink>
+            </TextBlock>
+        </Border>
+
+        <!-- Search box (fixed at top) -->
+        <TextBox DockPanel.Dock="Top"
                  Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
                  Margin="8,8,8,4"
                  Padding="6,4"
@@ -39,48 +61,33 @@
             </TextBox.Style>
         </TextBox>
 
-        <!-- Filter facets -->
-        <views:FilterPanelView Grid.Row="1" Margin="4,0,4,0" />
+        <!-- Scrollable area containing filter panel and park tree -->
+        <ScrollViewer DockPanel.Dock="Top" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <!-- Filter facets -->
+                <views:FilterPanelView Margin="4,0,4,4" />
 
-        <!-- Destination / Park TreeView -->
-        <TreeView Grid.Row="2"
-                  ItemsSource="{Binding FilteredDestinations}"
-                  BorderThickness="0"
-                  Margin="4,4,4,0"
-                  SelectedItemChanged="TreeView_SelectedItemChanged">
-            <TreeView.Resources>
-                <!-- Destination group template -->
-                <HierarchicalDataTemplate DataType="{x:Type vm:DestinationViewModel}"
-                                          ItemsSource="{Binding Parks}">
-                    <TextBlock Text="{Binding Name}"
-                               FontWeight="SemiBold"
-                               Padding="2,2,2,2" />
-                </HierarchicalDataTemplate>
+                <!-- Destination / Park TreeView -->
+                <TreeView ItemsSource="{Binding FilteredDestinations}"
+                          BorderThickness="0"
+                          Margin="4,0,4,4"
+                          SelectedItemChanged="TreeView_SelectedItemChanged">
+                    <TreeView.Resources>
+                        <!-- Destination group template -->
+                        <HierarchicalDataTemplate DataType="{x:Type vm:DestinationViewModel}"
+                                                  ItemsSource="{Binding Parks}">
+                            <TextBlock Text="{Binding Name}"
+                                       FontWeight="SemiBold"
+                                       Padding="2,2,2,2" />
+                        </HierarchicalDataTemplate>
 
-                <!-- Park leaf template -->
-                <DataTemplate DataType="{x:Type vm:ParkViewModel}">
-                    <TextBlock Text="{Binding Name}" Padding="2,1,2,1" />
-                </DataTemplate>
-            </TreeView.Resources>
-        </TreeView>
-
-        <!-- Bottom navigation -->
-        <Border Grid.Row="3"
-                BorderThickness="0,1,0,0"
-                BorderBrush="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}"
-                Padding="4,6,4,6">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Content="🗺 Parks"
-                        Command="{Binding NavigateParksCommand}"
-                        Margin="4,0,4,0"
-                        Padding="10,4"
-                        MinWidth="80" />
-                <Button Content="⚙ Settings"
-                        Command="{Binding NavigateSettingsCommand}"
-                        Margin="4,0,4,0"
-                        Padding="10,4"
-                        MinWidth="80" />
+                        <!-- Park leaf template -->
+                        <DataTemplate DataType="{x:Type vm:ParkViewModel}">
+                            <TextBlock Text="{Binding Name}" Padding="2,1,2,1" />
+                        </DataTemplate>
+                    </TreeView.Resources>
+                </TreeView>
             </StackPanel>
-        </Border>
-    </Grid>
+        </ScrollViewer>
+    </DockPanel>
 </UserControl>
