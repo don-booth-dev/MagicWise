@@ -1,20 +1,11 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using MagicWise.Core.Interfaces;
-using MagicWise.Core.Models.Enums;
 using System.Collections.ObjectModel;
 
 namespace MagicWise.Desktop.ViewModels;
 
 public partial class ParkDetailViewModel : ObservableObject
 {
-    private static readonly IReadOnlySet<EntityType> AllEntityTypes = new HashSet<EntityType>
-    {
-        EntityType.Attraction,
-        EntityType.Restaurant,
-        EntityType.Hotel,
-        EntityType.Show
-    };
-
     private readonly IThemeParksAPI _api;
 
     public ParkDetailViewModel(IThemeParksAPI api, ParkViewModel park)
@@ -37,11 +28,13 @@ public partial class ParkDetailViewModel : ObservableObject
     private bool _isLoading;
 
     /// <summary>
-    /// The entity types currently toggled on in the map filter panel. Defaults to
-    /// all types so pins render before the filter panel makes its first update.
+    /// The entity IDs currently checked in the map filter tree. Defaults to empty
+    /// (nothing shown) until the filter panel computes its first value, which
+    /// happens synchronously on construction and includes every already-loaded
+    /// child, so in practice pins never visibly "flash" all-then-filtered.
     /// </summary>
     [ObservableProperty]
-    private IReadOnlySet<EntityType> _visibleEntityTypes = AllEntityTypes;
+    private IReadOnlySet<string> _visibleEntityIds = new HashSet<string>();
 
     public ObservableCollection<EntityChildViewModel> Children { get; }
 

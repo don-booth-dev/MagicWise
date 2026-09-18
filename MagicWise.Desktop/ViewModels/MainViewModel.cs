@@ -41,7 +41,7 @@ public partial class MainViewModel : ObservableObject
     private void OnParkSelected(ParkViewModel park)
     {
         var detail = new ParkDetailViewModel(_api, park);
-        var filterPanel = new MapFilterPanelViewModel(park, visibleTypes => detail.VisibleEntityTypes = visibleTypes);
+        var filterPanel = new MapFilterPanelViewModel(park, detail.Children, ids => detail.VisibleEntityIds = ids);
 
         _lastParkDetail = detail;
         _lastMapFilterPanel = filterPanel;
