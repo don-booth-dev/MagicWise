@@ -11,19 +11,21 @@ namespace MagicWise.Desktop.ViewModels;
 
 /// <summary>
 /// The "Pick a Park" main-content page: search box, tag facet filters, and the
-/// destination/park tree. Notifies the owner (MainViewModel) when a park is chosen.
+/// resort (destination) list. Notifies the owner (MainViewModel) when a resort
+/// is chosen; picking a specific park within that resort happens afterwards, in
+/// the hamburger menu's park picker.
 /// </summary>
 public partial class ParkPickerViewModel : ObservableObject
 {
     private readonly IThemeParksAPI _api;
     private readonly MagicWiseDbContext _db;
-    private readonly Action<ParkViewModel> _onParkSelected;
+    private readonly Action<DestinationViewModel> _onDestinationSelected;
 
-    public ParkPickerViewModel(IThemeParksAPI api, MagicWiseDbContext db, Action<ParkViewModel> onParkSelected)
+    public ParkPickerViewModel(IThemeParksAPI api, MagicWiseDbContext db, Action<DestinationViewModel> onDestinationSelected)
     {
         _api = api;
         _db = db;
-        _onParkSelected = onParkSelected;
+        _onDestinationSelected = onDestinationSelected;
 
         _destinations = new ObservableCollection<DestinationViewModel>();
         FilteredDestinations = CollectionViewSource.GetDefaultView(_destinations);
@@ -77,11 +79,11 @@ public partial class ParkPickerViewModel : ObservableObject
             || destination.Parks.Any(p => p.Name.Contains(search, StringComparison.OrdinalIgnoreCase));
     }
 
-    // ── Park selection ────────────────────────────────────────────────────────
+    // ── Resort (destination) selection ──────────────────────────────────────
 
-    public void SelectPark(ParkViewModel park)
+    public void SelectDestination(DestinationViewModel destination)
     {
-        _onParkSelected(park);
+        _onDestinationSelected(destination);
     }
 
     // ── Initialisation ────────────────────────────────────────────────────────

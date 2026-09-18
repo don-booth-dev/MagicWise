@@ -1,0 +1,42 @@
+<UserControl x:Class="MagicWise.Desktop.Views.ResortFilterPanelView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:MagicWise.Desktop.ViewModels">
+    <DockPanel Margin="12" LastChildFill="True">
+        <!-- Resort (destination) name -->
+        <TextBlock DockPanel.Dock="Top"
+                   Text="{Binding Destination.Name}"
+                   FontSize="16"
+                   FontWeight="SemiBold"
+                   TextWrapping="Wrap" />
+
+        <TextBlock DockPanel.Dock="Top"
+                   Text="Pick a park"
+                   FontSize="11"
+                   FontWeight="SemiBold"
+                   Foreground="Gray"
+                   Margin="0,16,0,6" />
+
+        <!-- Single-select park picker: checking one park unchecks any other. -->
+        <ItemsControl DockPanel.Dock="Top" ItemsSource="{Binding Parks}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type vm:ParkSelectionItemViewModel}">
+                    <CheckBox Content="{Binding Name}"
+                              IsChecked="{Binding IsChecked, Mode=TwoWay}"
+                              Margin="0,2,0,2" />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <!-- Divider between the park picker and the entity filter tree (the
+             latter only appears once a park is actually selected). -->
+        <Border DockPanel.Dock="Top"
+                BorderThickness="0,1,0,0"
+                BorderBrush="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}"
+                Margin="0,12,0,0" />
+
+        <!-- Entity category filter tree for the currently-selected park (empty
+             until ActiveMapFilterPanel is set, i.e. no extra visual when null). -->
+        <ContentControl Content="{Binding ActiveMapFilterPanel}" />
+    </DockPanel>
+</UserControl>

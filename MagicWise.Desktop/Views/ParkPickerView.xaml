@@ -13,7 +13,7 @@
         <Border Grid.Row="0" Padding="16,12,16,12"
                 BorderThickness="0,0,0,1"
                 BorderBrush="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}">
-            <TextBlock Text="Pick a Park"
+            <TextBlock Text="Pick a Resort"
                        FontSize="20"
                        FontWeight="SemiBold" />
         </Border>
@@ -49,26 +49,20 @@
                     <!-- Filter facets -->
                     <views:FilterPanelView Margin="0,0,0,4" />
 
-                    <!-- Destination / Park TreeView -->
-                    <TreeView ItemsSource="{Binding FilteredDestinations}"
-                              BorderThickness="0"
-                              Margin="0,0,0,4"
-                              SelectedItemChanged="TreeView_SelectedItemChanged">
-                        <TreeView.Resources>
-                            <!-- Destination group template -->
-                            <HierarchicalDataTemplate DataType="{x:Type vm:DestinationViewModel}"
-                                                      ItemsSource="{Binding Parks}">
+                    <!-- Destination (resort) list. Picking a resort here moves park
+                         selection to the hamburger menu's park picker. -->
+                    <ListBox ItemsSource="{Binding FilteredDestinations}"
+                             BorderThickness="0"
+                             Margin="0,0,0,4"
+                             SelectionChanged="DestinationList_SelectionChanged">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate DataType="{x:Type vm:DestinationViewModel}">
                                 <TextBlock Text="{Binding Name}"
                                            FontWeight="SemiBold"
-                                           Padding="2,2,2,2" />
-                            </HierarchicalDataTemplate>
-
-                            <!-- Park leaf template -->
-                            <DataTemplate DataType="{x:Type vm:ParkViewModel}">
-                                <TextBlock Text="{Binding Name}" Padding="2,1,2,1" />
+                                           Padding="2,4,2,4" />
                             </DataTemplate>
-                        </TreeView.Resources>
-                    </TreeView>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
                 </StackPanel>
             </ScrollViewer>
         </DockPanel>

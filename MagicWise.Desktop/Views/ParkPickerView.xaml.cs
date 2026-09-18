@@ -10,11 +10,11 @@ public partial class ParkPickerView : UserControl
         InitializeComponent();
     }
 
-    private void TreeView_SelectedItemChanged(object sender, System.Windows.RoutedPropertyChangedEventArgs<object> e)
+    private void DestinationList_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (DataContext is ParkPickerViewModel vm && e.NewValue is ParkViewModel park)
+        if (DataContext is ParkPickerViewModel vm && e.AddedItems.Count > 0 && e.AddedItems[0] is DestinationViewModel destination)
         {
-            vm.SelectPark(park);
+            vm.SelectDestination(destination);
         }
     }
 }
