@@ -1,0 +1,29 @@
+<UserControl x:Class="MagicWise.Desktop.Views.MapFilterPanelView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:MagicWise.Desktop.ViewModels">
+    <StackPanel Margin="12">
+        <!-- Selected park -->
+        <TextBlock Text="{Binding Park.Name}"
+                   FontSize="16"
+                   FontWeight="SemiBold"
+                   TextWrapping="Wrap" />
+
+        <TextBlock Text="Show on map"
+                   FontSize="11"
+                   FontWeight="SemiBold"
+                   Foreground="Gray"
+                   Margin="0,16,0,6" />
+
+        <!-- Entity type checkboxes -->
+        <ItemsControl ItemsSource="{Binding Filters}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type vm:EntityTypeFilterViewModel}">
+                    <CheckBox Content="{Binding DisplayName}"
+                              IsChecked="{Binding IsChecked, Mode=TwoWay}"
+                              Margin="0,2,0,2" />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </StackPanel>
+</UserControl>
