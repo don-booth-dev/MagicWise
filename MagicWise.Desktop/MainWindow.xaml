@@ -72,7 +72,44 @@
                     BorderThickness="0,0,1,0"
                     BorderBrush="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}"
                     ClipToBounds="True">
-                <views:ParkListView />
+                <DockPanel>
+                    <!-- Bottom navigation (fixed at bottom) -->
+                    <Border DockPanel.Dock="Bottom"
+                            BorderThickness="0,1,0,0"
+                            BorderBrush="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}"
+                            Padding="4,6,4,6">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Button Content="🗺 Parks"
+                                    Command="{Binding NavigateParksCommand}"
+                                    Margin="4,0,4,0"
+                                    Padding="10,4"
+                                    MinWidth="80" />
+                            <Button Content="⚙ Settings"
+                                    Command="{Binding NavigateSettingsCommand}"
+                                    Margin="4,0,4,0"
+                                    Padding="10,4"
+                                    MinWidth="80" />
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Attribution (fixed at bottom, above buttons) -->
+                    <Border DockPanel.Dock="Bottom"
+                            BorderThickness="0,1,0,0"
+                            BorderBrush="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}"
+                            Padding="4,6,4,6"
+                            Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
+                        <TextBlock TextAlignment="Center" FontSize="12">
+                            <Run Text="Powered by " />
+                            <Hyperlink NavigateUri="https://www.themeparks.wiki/" RequestNavigate="Hyperlink_RequestNavigate" Foreground="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}">
+                                <Run Text="ThemeParks.wiki" />
+                            </Hyperlink>
+                        </TextBlock>
+                    </Border>
+
+                    <!-- Swappable content: empty until a park is selected, then the map filter panel -->
+                    <ContentControl DockPanel.Dock="Top"
+                                    Content="{Binding LeftPanelContent}" />
+                </DockPanel>
             </Border>
 
             <!-- Right panel — ContentControl auto-resolves page View from DataTemplate -->

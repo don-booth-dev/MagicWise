@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
+using System.Windows.Navigation;
 
 namespace MagicWise.Desktop;
 
@@ -45,5 +46,15 @@ public partial class MainWindow : Window
             EasingFunction = new CubicEase { EasingMode = EasingMode.EaseInOut }
         };
         LeftPanelColumn.BeginAnimation(ColumnDefinition.WidthProperty, animation);
+    }
+
+    private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
+    {
+        System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+        {
+            FileName = e.Uri.AbsoluteUri,
+            UseShellExecute = true
+        });
+        e.Handled = true;
     }
 }

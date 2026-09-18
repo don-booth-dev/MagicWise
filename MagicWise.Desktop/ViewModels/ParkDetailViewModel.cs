@@ -1,11 +1,20 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using MagicWise.Core.Interfaces;
+using MagicWise.Core.Models.Enums;
 using System.Collections.ObjectModel;
 
 namespace MagicWise.Desktop.ViewModels;
 
 public partial class ParkDetailViewModel : ObservableObject
 {
+    private static readonly IReadOnlySet<EntityType> AllEntityTypes = new HashSet<EntityType>
+    {
+        EntityType.Attraction,
+        EntityType.Restaurant,
+        EntityType.Hotel,
+        EntityType.Show
+    };
+
     private readonly IThemeParksAPI _api;
 
     public ParkDetailViewModel(IThemeParksAPI api, ParkViewModel park)
@@ -26,6 +35,13 @@ public partial class ParkDetailViewModel : ObservableObject
 
     [ObservableProperty]
     private bool _isLoading;
+
+    /// <summary>
+    /// The entity types currently toggled on in the map filter panel. Defaults to
+    /// all types so pins render before the filter panel makes its first update.
+    /// </summary>
+    [ObservableProperty]
+    private IReadOnlySet<EntityType> _visibleEntityTypes = AllEntityTypes;
 
     public ObservableCollection<EntityChildViewModel> Children { get; }
 

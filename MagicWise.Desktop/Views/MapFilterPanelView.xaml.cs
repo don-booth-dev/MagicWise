@@ -2,9 +2,9 @@ using System.Windows.Controls;
 
 namespace MagicWise.Desktop.Views;
 
-public partial class WelcomePageView : UserControl
+public partial class MapFilterPanelView : UserControl
 {
-    public WelcomePageView()
+    public MapFilterPanelView()
     {
         InitializeComponent();
     }
