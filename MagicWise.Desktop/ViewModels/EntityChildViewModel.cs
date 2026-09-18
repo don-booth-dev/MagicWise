@@ -7,11 +7,14 @@ public class EntityChildViewModel
 {
     public EntityChildViewModel(EntityChild child)
     {
+        Id = child.Id;
         Name = child.Name;
         EntityType = child.EntityType;
         Latitude = child.Location?.Latitude;
         Longitude = child.Location?.Longitude;
     }
+
+    public string Id { get; }
 
     public string Name { get; }
 

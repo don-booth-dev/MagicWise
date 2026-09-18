@@ -2,28 +2,48 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="clr-namespace:MagicWise.Desktop.ViewModels">
-    <StackPanel Margin="12">
+    <Grid Margin="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
         <!-- Selected park -->
-        <TextBlock Text="{Binding Park.Name}"
+        <TextBlock Grid.Row="0"
+                   Text="{Binding Park.Name}"
                    FontSize="16"
                    FontWeight="SemiBold"
                    TextWrapping="Wrap" />
 
-        <TextBlock Text="Show on map"
+        <TextBlock Grid.Row="1"
+                   Text="Show on map"
                    FontSize="11"
                    FontWeight="SemiBold"
                    Foreground="Gray"
                    Margin="0,16,0,6" />
 
-        <!-- Entity type checkboxes -->
-        <ItemsControl ItemsSource="{Binding Filters}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate DataType="{x:Type vm:EntityTypeFilterViewModel}">
+        <!-- Entity category tree: expand a category to see (and toggle) each
+             individual item; the category checkbox selects/clears all of them. -->
+        <TreeView Grid.Row="2"
+                  ItemsSource="{Binding Categories}"
+                  BorderThickness="0">
+            <TreeView.Resources>
+                <HierarchicalDataTemplate DataType="{x:Type vm:EntityCategoryViewModel}"
+                                          ItemsSource="{Binding Items}">
                     <CheckBox Content="{Binding DisplayName}"
+                              IsThreeState="True"
                               IsChecked="{Binding IsChecked, Mode=TwoWay}"
+                              FontWeight="SemiBold"
                               Margin="0,2,0,2" />
+                </HierarchicalDataTemplate>
+
+                <DataTemplate DataType="{x:Type vm:EntityItemViewModel}">
+                    <CheckBox Content="{Binding Name}"
+                              IsChecked="{Binding IsChecked, Mode=TwoWay}"
+                              Margin="0,1,0,1" />
                 </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-    </StackPanel>
+            </TreeView.Resources>
+        </TreeView>
+    </Grid>
 </UserControl>
