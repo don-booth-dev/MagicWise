@@ -12,6 +12,7 @@ public partial class MainViewModel : ObservableObject
 
     private ParkDetailViewModel? _lastParkDetail;
     private MapFilterPanelViewModel? _lastMapFilterPanel;
+    private ResortFilterPanelViewModel? _lastResortPanel;
 
     public MainViewModel(IThemeParksAPI api, MagicWiseDbContext db)
     {
@@ -28,18 +29,41 @@ public partial class MainViewModel : ObservableObject
 
     /// <summary>
     /// Content shown above the fixed left-panel chrome (nav + attribution). Empty
-    /// until a park is selected, at which point it shows the map filter panel.
+    /// until a resort is selected, at which point it shows the resort's park
+    /// picker (and, once a park is chosen there too, the map filter tree nested
+    /// beneath it).
     /// </summary>
     [ObservableProperty]
     private object? _leftPanelContent;
 
     private ParkPickerViewModel CreateParkPicker()
     {
-        return new ParkPickerViewModel(_api, _db, OnParkSelected);
+        return new ParkPickerViewModel(_api, _db, OnDestinationSelected);
     }
 
-    private void OnParkSelected(ParkViewModel park)
+    private void OnDestinationSelected(DestinationViewModel destination)
     {
+        var resortPanel = new ResortFilterPanelViewModel(destination, OnParkSelectionChanged);
+        _lastResortPanel = resortPanel;
+
+        LeftPanelContent = resortPanel;
+        // No park chosen yet within the resort: show the default empty state.
+        CurrentPage = new NoParkSelectedViewModel();
+    }
+
+    private void OnParkSelectionChanged(ParkViewModel? park)
+    {
+        if (park == null)
+        {
+            CurrentPage = new NoParkSelectedViewModel();
+            if (_lastResortPanel != null)
+            {
+                _lastResortPanel.ActiveMapFilterPanel = null;
+            }
+
+            return;
+        }
+
         var detail = new ParkDetailViewModel(_api, park);
         var filterPanel = new MapFilterPanelViewModel(park, detail.Children, ids => detail.VisibleEntityIds = ids);
 
@@ -47,7 +71,10 @@ public partial class MainViewModel : ObservableObject
         _lastMapFilterPanel = filterPanel;
 
         CurrentPage = detail;
-        LeftPanelContent = filterPanel;
+        if (_lastResortPanel != null)
+        {
+            _lastResortPanel.ActiveMapFilterPanel = filterPanel;
+        }
     }
 
     [RelayCommand]
@@ -55,6 +82,7 @@ public partial class MainViewModel : ObservableObject
     {
         CurrentPage = CreateParkPicker();
         LeftPanelContent = null;
+        _lastResortPanel = null;
     }
 
     [RelayCommand]

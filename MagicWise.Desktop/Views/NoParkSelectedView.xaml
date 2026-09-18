@@ -1,0 +1,16 @@
+<UserControl x:Class="MagicWise.Desktop.Views.NoParkSelectedView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid Background="Transparent">
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock Text="🎡"
+                       FontSize="72"
+                       HorizontalAlignment="Center" />
+            <TextBlock Text="Pick a park from the menu to see its map"
+                       FontSize="16"
+                       Foreground="Gray"
+                       Margin="0,12,0,0"
+                       HorizontalAlignment="Center" />
+        </StackPanel>
+    </Grid>
+</UserControl>
