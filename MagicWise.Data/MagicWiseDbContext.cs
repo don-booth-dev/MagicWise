@@ -108,37 +108,37 @@ public class MagicWiseDbContext : DbContext
         }
 
         // Walt Disney World Resort (US)
-        Map("waltdisneyworld",          1, 11, 16);
+        Map("waltdisneyworldresort",    1, 11, 16);
         // Disneyland Resort (US)
-        Map("disneyland",               1, 11, 16);
+        Map("disneylandresort",         1, 11, 16);
         // Disneyland Paris
-        Map("disneylandparis",          1, 12, 18);
+        Map("dlp",                      1, 12, 18);
         // Tokyo Disney Resort
-        Map("tokyodisney",              1, 13, 19);
+        Map("tdr",                      1, 13, 19);
         // Hong Kong Disneyland
-        Map("hongkongdisneyland",       1, 13, 30);
+        Map("hongkongdisneylandpark",   1, 13, 30);
         // Shanghai Disney Resort
-        Map("shanghaidisney",           1, 13, 20);
+        Map("shanghaidisneyresort",     1, 13, 20);
         // Universal Orlando Resort
-        Map("universalorlando",         2, 11, 16);
+        Map("universalresort_orlando",  2, 11, 16);
         // Universal Studios Hollywood
-        Map("universalhollywood",       2, 11, 16);
+        Map("universalresort_hollywood", 2, 11, 16);
         // Universal Studios Japan
-        Map("universaljapan",           2, 13, 19);
+        Map("universalstudiosjapan",    2, 13, 19);
         // Universal Studios Singapore
         Map("universalsingapore",       2, 13);
         // Six Flags Magic Mountain
-        Map("sixflagsmagicmountain",    3, 11, 16);
+        Map("sixflags_destination_SFMM", 3, 11, 16);
         // Six Flags Great Adventure
-        Map("sixflagsgreatadventure",   3, 11, 16);
+        Map("sixflags_destination_GADV", 3, 11, 16);
         // Six Flags Over Georgia
-        Map("sixflagsovergeorgia",      3, 11, 16);
+        Map("sixflags_destination_SFOG", 3, 11, 16);
         // Six Flags Over Texas
-        Map("sixflagsovertexas",        3, 11, 16);
+        Map("sixflags_destination_SFOT", 3, 11, 16);
         // Six Flags Great America
-        Map("sixflagsgreatamerica",     3, 11, 16);
+        Map("sixflags_destination_SFGR", 3, 11, 16);
         // SeaWorld Orlando
-        Map("seaworldorlando",          4, 11, 16);
+        Map("seaworldorlandoresort",    4, 11, 16);
         // SeaWorld San Diego
         Map("seaworldsandiego",         4, 11, 16);
         // SeaWorld San Antonio
@@ -146,42 +146,47 @@ public class MagicWiseDbContext : DbContext
         // Busch Gardens Tampa
         Map("buschgardenstampa",        4, 11, 16);
         // Busch Gardens Williamsburg
-        Map("buschgardenswilliamsburg", 4, 11, 16);
+        Map("buschgardenswillamsburg",  4, 11, 16);
         // LEGOLAND California
-        Map("legolandcalifornia",       5, 11, 16);
+        Map("legolandcaliforniaresort", 5, 11, 16);
         // LEGOLAND Florida
-        Map("legolandflorida",          5, 11, 16);
+        Map("legolandorlandoresort",    5, 11, 16);
         // LEGOLAND Windsor
-        Map("legolandwindsor",          5, 12, 17);
+        Map("legolandwindsorresort",    5, 12, 17);
         // LEGOLAND Deutschland
-        Map("legolanddeutschland",      5, 12, 25);
+        Map("legolanddeutschlandresort", 5, 12, 25);
         // Alton Towers
-        Map("altontowers",              5, 12, 17);
+        Map("altontowersresort",        5, 12, 17);
         // Thorpe Park
-        Map("thorpepark",               5, 12, 17);
+        Map("thorpeparkresort",         5, 12, 17);
         // Chessington World of Adventures
-        Map("chessingtonwoa",           5, 12, 17);
+        Map("chessingtonworldofadventuresresort", 5, 12, 17);
         // Gardaland
-        Map("gardaland",                5, 12);
+        Map("gardalandresort",          5, 12);
         // Efteling
-        Map("efteling",                 9, 12, 24);
+        Map("eftelingresort",           9, 12, 24);
         // Europa-Park
         Map("europapark",               10, 12, 25);
         // Phantasialand
-        Map("phantasialand",            12, 25);
-        // Tivoli Gardens
+        Map("phantasialanddest",        12, 25);
+        // Tivoli Gardens (not currently tracked by the themeparks.wiki API;
+        // left in place in case it's added later)
         Map("tivoligardens",            12, 28);
         // Liseberg
         Map("liseberg",                 12, 29);
         // PortAventura World
         Map("portaventuraworld",        8, 12, 26);
-        // Plopsaland
-        Map("plopsaland",               8, 12, 27);
-        // IMG Worlds of Adventure
+        // Plopsaland (themeparks.wiki tracks the Belgium and Deutschland parks
+        // as two separate destinations under the same brand)
+        Map("plopsalanddeutschland",    8, 12, 27);
+        Map("plopsaland-de-panne",      8, 12, 27);
+        // IMG Worlds of Adventure (not currently tracked by the themeparks.wiki
+        // API; left in place in case it's added later)
         Map("imgworldsofadventure",     14, 23);
-        // Ferrari World Abu Dhabi
+        // Ferrari World Abu Dhabi (not currently tracked by the themeparks.wiki
+        // API; left in place in case it's added later)
         Map("ferrariworldabudhabi",     14, 23);
-        // Warner Bros. World Abu Dhabi
-        Map("warnerbrosworld",          14, 23);
+        // Warner Bros. Movie World Abu Dhabi
+        Map("vrtp_mw_te2_destination",  14, 23);
     }
 }

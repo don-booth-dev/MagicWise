@@ -4,15 +4,17 @@
              xmlns:local="clr-namespace:MagicWise.Desktop"
              xmlns:vm="clr-namespace:MagicWise.Desktop.ViewModels"
              xmlns:views="clr-namespace:MagicWise.Desktop.Views"
+             xmlns:converters="clr-namespace:MagicWise.Desktop.Converters"
              Startup="OnStartup">
     <Application.Resources>
         <ResourceDictionary>
-            <!-- Converter available application-wide -->
+            <!-- Converters available application-wide -->
             <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+            <converters:InverseBooleanToVisibilityConverter x:Key="InverseBoolToVisibilityConverter" />
 
             <!-- Page DataTemplates: right-panel ContentControl resolves View from ViewModel type -->
-            <DataTemplate DataType="{x:Type vm:ParkPickerViewModel}">
-                <views:ParkPickerView />
+            <DataTemplate DataType="{x:Type vm:ResortPickerViewModel}">
+                <views:ResortPickerView />
             </DataTemplate>
             <DataTemplate DataType="{x:Type vm:ParkDetailViewModel}">
                 <views:ParkDetailView />
