@@ -53,6 +53,14 @@ public class ThemeParksAPI : IThemeParksAPI
         return dto?.ToDomain();
     }
 
+    // GET /v1/entity/{id}/live (full liveData array, e.g. every child of a park)
+    public async Task<List<LiveData>?> GetEntityLiveDataAsync(string id, CancellationToken ct = default)
+    {
+        string path = $"/v1/entity/{Uri.EscapeDataString(id)}/live";
+        var dtos = await GetAsync<List<EntityLiveDataDto>>(path, ct).ConfigureAwait(false);
+        return dtos?.Select(d => d.ToDomain()).ToList();
+    }
+
     // GET /v1/entity/{id}/schedule
     public async Task<Schedule?> GetEntityScheduleAsync(string id, CancellationToken ct = default)
     {
@@ -163,6 +171,15 @@ public class ThemeParksAPI : IThemeParksAPI
             if (root.TryGetProperty("children", out var children))
             {
                 value = (T)(object?)children.Deserialize<List<EntityChildDto>>(_jsonOptions)!;
+                return true;
+            }
+        }
+
+        if (typeof(T) == typeof(List<EntityLiveDataDto>))
+        {
+            if (root.TryGetProperty("liveData", out var liveDataList))
+            {
+                value = (T)(object?)liveDataList.Deserialize<List<EntityLiveDataDto>>(_jsonOptions)!;
                 return true;
             }
         }

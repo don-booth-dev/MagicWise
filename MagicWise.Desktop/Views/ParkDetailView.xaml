@@ -27,6 +27,8 @@
         <!-- Map -->
         <mapsui:MapControl x:Name="MapControl"
                            Grid.Row="1"
-                           Loaded="MapControl_Loaded" />
+                           Loaded="MapControl_Loaded"
+                           MouseMove="MapControl_MouseMove"
+                           MouseLeave="MapControl_MouseLeave" />
     </Grid>
 </UserControl>
