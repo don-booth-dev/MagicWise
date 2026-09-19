@@ -23,6 +23,12 @@ public class EntityChildViewModel
     public double? Latitude { get; }
 
     public double? Longitude { get; }
+
+    /// <summary>
+    /// Current standby wait time in minutes, populated once live data has loaded.
+    /// Null until fetched, or if this entity type has no queue (e.g. hotels).
+    /// </summary>
+    public int? WaitTimeMinutes { get; set; }
 }
 
 
