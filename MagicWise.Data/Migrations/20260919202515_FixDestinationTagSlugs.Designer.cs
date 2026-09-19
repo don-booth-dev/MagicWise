@@ -2,6 +2,7 @@
 using MagicWise.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -9,9 +10,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MagicWise.Data.Migrations
 {
     [DbContext(typeof(MagicWiseDbContext))]
-    partial class MagicWiseDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260919202515_FixDestinationTagSlugs")]
+    partial class FixDestinationTagSlugs
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.7");
