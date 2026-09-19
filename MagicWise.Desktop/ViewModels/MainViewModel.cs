@@ -19,7 +19,7 @@ public partial class MainViewModel : ObservableObject
         _api = api;
         _db = db;
 
-        CurrentPage = CreateParkPicker();
+        CurrentPage = CreateResortPicker();
     }
 
     // ── Page routing ──────────────────────────────────────────────────────────
@@ -36,9 +36,9 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty]
     private object? _leftPanelContent;
 
-    private ParkPickerViewModel CreateParkPicker()
+    private ResortPickerViewModel CreateResortPicker()
     {
-        return new ParkPickerViewModel(_api, _db, OnDestinationSelected);
+        return new ResortPickerViewModel(_api, _db, OnDestinationSelected);
     }
 
     private void OnDestinationSelected(DestinationViewModel destination)
@@ -80,7 +80,7 @@ public partial class MainViewModel : ObservableObject
     [RelayCommand]
     private void NavigateParks()
     {
-        CurrentPage = CreateParkPicker();
+        CurrentPage = CreateResortPicker();
         LeftPanelContent = null;
         _lastResortPanel = null;
     }
