@@ -1,4 +1,4 @@
-<UserControl x:Class="MagicWise.Desktop.Views.ParkPickerView"
+<UserControl x:Class="MagicWise.Desktop.Views.ResortPickerView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="clr-namespace:MagicWise.Desktop.ViewModels"
@@ -48,6 +48,21 @@
                 <StackPanel Margin="16,0,16,16">
                     <!-- Filter facets -->
                     <views:FilterPanelView Margin="0,0,0,4" />
+
+                    <!-- Divider separating the search/filter area from the resort
+                         list below, so they don't visually run together. -->
+                    <Border BorderThickness="0,0,0,1"
+                            BorderBrush="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}"
+                            Margin="0,8,0,8" />
+
+                    <!-- Empty-state hint shown until a search or filter is active,
+                         so the resort list isn't just blank space. -->
+                    <TextBlock Text="Search for a resort or apply a filter above to see results."
+                               Foreground="Gray"
+                               FontStyle="Italic"
+                               TextWrapping="Wrap"
+                               Margin="2,0,0,8"
+                               Visibility="{Binding HasSearchOrFilterCriteria, Converter={StaticResource InverseBoolToVisibilityConverter}}" />
 
                     <!-- Destination (resort) list. Picking a resort here moves park
                          selection to the hamburger menu's park picker. -->

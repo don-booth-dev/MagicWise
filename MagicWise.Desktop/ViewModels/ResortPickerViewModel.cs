@@ -10,18 +10,18 @@ using System.Windows.Data;
 namespace MagicWise.Desktop.ViewModels;
 
 /// <summary>
-/// The "Pick a Park" main-content page: search box, tag facet filters, and the
+/// The "Pick a Resort" main-content page: search box, tag facet filters, and the
 /// resort (destination) list. Notifies the owner (MainViewModel) when a resort
 /// is chosen; picking a specific park within that resort happens afterwards, in
 /// the hamburger menu's park picker.
 /// </summary>
-public partial class ParkPickerViewModel : ObservableObject
+public partial class ResortPickerViewModel : ObservableObject
 {
     private readonly IThemeParksAPI _api;
     private readonly MagicWiseDbContext _db;
     private readonly Action<DestinationViewModel> _onDestinationSelected;
 
-    public ParkPickerViewModel(IThemeParksAPI api, MagicWiseDbContext db, Action<DestinationViewModel> onDestinationSelected)
+    public ResortPickerViewModel(IThemeParksAPI api, MagicWiseDbContext db, Action<DestinationViewModel> onDestinationSelected)
     {
         _api = api;
         _db = db;
@@ -51,8 +51,21 @@ public partial class ParkPickerViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(FilteredDestinations))]
     private string _searchText = string.Empty;
 
+    /// <summary>
+    /// True once the user has typed a search term or checked a tag filter.
+    /// Drives the "search or filter to see resorts" empty-state hint.
+    /// </summary>
+    [ObservableProperty]
+    private bool _hasSearchOrFilterCriteria;
+
     partial void OnSearchTextChanged(string value)
     {
+        RefreshFilteredDestinations();
+    }
+
+    private void RefreshFilteredDestinations()
+    {
+        HasSearchOrFilterCriteria = !string.IsNullOrWhiteSpace(SearchText) || FilterPanel.HasActiveFilters;
         FilteredDestinations.Refresh();
     }
 
@@ -63,13 +76,23 @@ public partial class ParkPickerViewModel : ObservableObject
             return false;
         }
 
+        bool hasSearch = !string.IsNullOrWhiteSpace(SearchText);
+        bool hasActiveFilters = FilterPanel.HasActiveFilters;
+
+        // Nothing is shown until the user starts searching or applies a tag
+        // filter; an unfiltered list of every resort isn't useful up front.
+        if (!hasSearch && !hasActiveFilters)
+        {
+            return false;
+        }
+
         bool passesTagFilter = FilterPanel.Matches(destination.TagIds);
         if (!passesTagFilter)
         {
             return false;
         }
 
-        if (string.IsNullOrWhiteSpace(SearchText))
+        if (!hasSearch)
         {
             return true;
         }
@@ -104,7 +127,7 @@ public partial class ParkPickerViewModel : ObservableObject
 
         Action onFilterChanged = () =>
         {
-            App.Current.Dispatcher.Invoke(() => FilteredDestinations.Refresh());
+            App.Current.Dispatcher.Invoke(RefreshFilteredDestinations);
         };
 
         var categoryVms = categories.Select(c => new TagCategoryViewModel(c, onFilterChanged));
@@ -136,7 +159,20 @@ public partial class ParkPickerViewModel : ObservableObject
             _destinations.Clear();
             foreach (var dest in apiDestinations.OrderBy(d => d.Name))
             {
-                tagLookup.TryGetValue(dest.Id, out var tagIds);
+                // DestinationTags are seeded keyed by the themeparks.wiki slug
+                // (e.g. "waltdisneyworld"), not the GUID returned as Destination.Id,
+                // so look up tags by slug first and fall back to Id for safety.
+                List<int>? tagIds = null;
+                if (!string.IsNullOrEmpty(dest.Slug))
+                {
+                    tagLookup.TryGetValue(dest.Slug, out tagIds);
+                }
+
+                if (tagIds == null)
+                {
+                    tagLookup.TryGetValue(dest.Id, out tagIds);
+                }
+
                 _destinations.Add(new DestinationViewModel(
                     dest.Id,
                     dest.Name,
