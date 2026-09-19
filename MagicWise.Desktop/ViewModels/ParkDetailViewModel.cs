@@ -36,6 +36,14 @@ public partial class ParkDetailViewModel : ObservableObject
     [ObservableProperty]
     private IReadOnlySet<string> _visibleEntityIds = new HashSet<string>();
 
+    /// <summary>
+    /// Bumped whenever wait times finish (re)loading, purely so the view can
+    /// tell it needs to rebuild pin tooltips. The wait times themselves live on
+    /// each <see cref="EntityChildViewModel"/>, not here.
+    /// </summary>
+    [ObservableProperty]
+    private DateTime? _waitTimesUpdatedAt;
+
     public ObservableCollection<EntityChildViewModel> Children { get; }
 
     private async Task LoadAsync()
@@ -59,6 +67,40 @@ public partial class ParkDetailViewModel : ObservableObject
         finally
         {
             IsLoading = false;
+        }
+
+        await LoadWaitTimesAsync().ConfigureAwait(false);
+    }
+
+    private async Task LoadWaitTimesAsync()
+    {
+        try
+        {
+            var liveData = await _api.GetEntityLiveDataAsync(Park.Id).ConfigureAwait(false);
+            if (liveData == null)
+            {
+                return;
+            }
+
+            var waitTimesById = liveData.ToDictionary(d => d.Id, d => d.StandbyWaitMinutes);
+
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                foreach (var child in Children)
+                {
+                    if (waitTimesById.TryGetValue(child.Id, out var waitMinutes))
+                    {
+                        child.WaitTimeMinutes = waitMinutes;
+                    }
+                }
+
+                WaitTimesUpdatedAt = DateTime.UtcNow;
+            });
+        }
+        catch
+        {
+            // Wait times are a nice-to-have overlay; failures here shouldn't
+            // block the rest of the park view from working.
         }
     }
 }

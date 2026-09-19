@@ -8,6 +8,7 @@ using Mapsui.Styles;
 using Mapsui.Tiling;
 using System.ComponentModel;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace MagicWise.Desktop.Views;
 
@@ -30,8 +31,16 @@ public partial class ParkDetailView : UserControl
     private const int ParkPinSize = 14;
     private const int EntityPinSize = 9;
 
+    // How close (in screen pixels) the mouse needs to be to a pin before its
+    // callout appears; small pins are otherwise hard to hit precisely.
+    private const int HoverHitTestMargin = 8;
+
     private MemoryLayer? _pinLayer;
+    private MemoryLayer? _calloutLayer;
     private ParkDetailViewModel? _viewModel;
+
+    /// <summary>The pin feature whose callout is currently shown (hovered), if any.</summary>
+    private IFeature? _activeCalloutFeature;
 
     /// <summary>
     /// The map resolution captured right after the view was last fit to the
@@ -57,8 +66,14 @@ public partial class ParkDetailView : UserControl
         var map = new Map();
         map.Layers.Add(OpenStreetMap.CreateTileLayer());
 
-        _pinLayer = new MemoryLayer { Name = "Pins", Style = null };
+        _pinLayer = new MemoryLayer { Name = "Pins", Style = null, IsMapInfoLayer = true };
         map.Layers.Add(_pinLayer);
+
+        // Added after the pin layer so it always renders on top: without this,
+        // pins added later to _pinLayer's feature list can paint over an
+        // earlier pin's enabled callout.
+        _calloutLayer = new MemoryLayer { Name = "Callout", Style = null, IsMapInfoLayer = false };
+        map.Layers.Add(_calloutLayer);
 
         map.Navigator.ViewportChanged += OnViewportChanged;
 
@@ -106,6 +121,12 @@ public partial class ParkDetailView : UserControl
             // All children have finished loading: fit the view to show the whole park.
             Dispatcher.Invoke(() => UpdatePins(fitView: true));
         }
+        else if (e.PropertyName == nameof(ParkDetailViewModel.WaitTimesUpdatedAt))
+        {
+            // Wait times just finished loading; rebuild pin tooltip attributes
+            // without disturbing the camera.
+            Dispatcher.Invoke(() => UpdatePins(fitView: false));
+        }
     }
 
     private void OnChildrenChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -152,6 +173,15 @@ public partial class ParkDetailView : UserControl
             return;
         }
 
+        // Pins are being rebuilt from scratch, so any callout referencing the
+        // old feature instances is now stale.
+        _activeCalloutFeature = null;
+        if (_calloutLayer != null)
+        {
+            _calloutLayer.Features = Array.Empty<IFeature>();
+            _calloutLayer.DataHasChanged();
+        }
+
         var features = new List<IFeature>();
 
         if (_viewModel.Latitude.HasValue && _viewModel.Longitude.HasValue)
@@ -159,7 +189,11 @@ public partial class ParkDetailView : UserControl
             var parkPoint = SphericalMercator.FromLonLat(_viewModel.Longitude.Value, _viewModel.Latitude.Value).ToMPoint();
             features.Add(new PointFeature(parkPoint)
             {
-                Styles = { CreatePinStyle(ParkPinColor, SymbolType.Ellipse, ParkPinSize, _zoomSizeMultiplier) }
+                Styles =
+                {
+                    CreatePinStyle(ParkPinColor, SymbolType.Ellipse, ParkPinSize, _zoomSizeMultiplier),
+                    CreateCalloutStyle(_viewModel.Park.Name, subtitle: null, ParkPinSize, _zoomSizeMultiplier)
+                }
             });
 
             var allChildPoints = new List<MPoint>();
@@ -176,9 +210,17 @@ public partial class ParkDetailView : UserControl
                             ? style
                             : (Color.FromArgb(220, 120, 120, 120), SymbolType.Ellipse);
 
+                        var subtitle = child.WaitTimeMinutes is int waitMinutes
+                            ? $"Wait Time: {waitMinutes} min"
+                            : null;
+
                         features.Add(new PointFeature(childPoint)
                         {
-                            Styles = { CreatePinStyle(color, shape, EntityPinSize, _zoomSizeMultiplier) }
+                            Styles =
+                            {
+                                CreatePinStyle(color, shape, EntityPinSize, _zoomSizeMultiplier),
+                                CreateCalloutStyle(child.Name, subtitle, EntityPinSize, _zoomSizeMultiplier)
+                            }
                         });
                     }
                 }
@@ -246,5 +288,71 @@ public partial class ParkDetailView : UserControl
             Outline = new Pen(Color.White, 2),
             SymbolScale = (size / 20.0) * scaleMultiplier
         };
+    }
+
+    private static CalloutStyle CreateCalloutStyle(string title, string? subtitle, int pinSize, double scaleMultiplier)
+    {
+        return new CalloutStyle
+        {
+            Type = subtitle != null ? CalloutType.Detail : CalloutType.Single,
+            Title = title,
+            TitleFont = { Bold = true, Size = 12 },
+            Subtitle = subtitle,
+            SubtitleFont = { Size = 11 },
+            MaxWidth = 220,
+            RectRadius = 6,
+            ShadowWidth = 4,
+            BackgroundColor = Color.FromArgb(240, 34, 34, 34),
+            TitleFontColor = Color.White,
+            SubtitleFontColor = Color.FromArgb(255, 220, 220, 220),
+            // Anchors the callout's arrow just above the pin so it doesn't cover it.
+            Offset = new Offset(0, pinSize * scaleMultiplier),
+            Enabled = false
+        };
+    }
+
+    private void MapControl_MouseMove(object sender, MouseEventArgs e)
+    {
+        var position = e.GetPosition(MapControl);
+        var mapInfo = MapControl.GetMapInfo(new MPoint(position.X, position.Y), HoverHitTestMargin);
+        var hoveredFeature = mapInfo?.Feature != null
+            && mapInfo.Feature.Styles.OfType<CalloutStyle>().Any()
+                ? mapInfo.Feature
+                : null;
+
+        SetActiveCallout(hoveredFeature);
+    }
+
+    private void MapControl_MouseLeave(object sender, MouseEventArgs e)
+    {
+        SetActiveCallout(null);
+    }
+
+    private void SetActiveCallout(IFeature? feature)
+    {
+        if (ReferenceEquals(_activeCalloutFeature, feature) || _calloutLayer == null)
+        {
+            return;
+        }
+
+        var previousCallout = _activeCalloutFeature?.Styles.OfType<CalloutStyle>().FirstOrDefault();
+        if (previousCallout != null)
+        {
+            previousCallout.Enabled = false;
+        }
+
+        var newCallout = feature?.Styles.OfType<CalloutStyle>().FirstOrDefault();
+        if (newCallout != null)
+        {
+            newCallout.Enabled = true;
+        }
+
+        _activeCalloutFeature = feature;
+
+        // Re-adding the same feature to a layer rendered after _pinLayer draws
+        // its (already-enabled) callout on top of every pin, regardless of
+        // where the feature sits in _pinLayer's own draw order.
+        _calloutLayer.Features = feature != null ? new[] { feature } : Array.Empty<IFeature>();
+        _calloutLayer.DataHasChanged();
     }
 }

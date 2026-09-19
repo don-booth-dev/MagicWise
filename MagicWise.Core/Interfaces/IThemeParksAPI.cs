@@ -16,6 +16,9 @@ public interface IThemeParksAPI
     // GET /v1/entity/{id}/live
     Task<LiveData?> GetEntityLiveAsync(string id, CancellationToken ct = default);
 
+    // GET /v1/entity/{id}/live (full liveData array, e.g. every child of a park)
+    Task<List<LiveData>?> GetEntityLiveDataAsync(string id, CancellationToken ct = default);
+
     // GET /v1/entity/{id}/schedule
     Task<Schedule?> GetEntityScheduleAsync(string id, CancellationToken ct = default);
 
