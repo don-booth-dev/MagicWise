@@ -16,7 +16,7 @@ public class ThemeParksApiIntegrationTests
     private static async Task<string> GetKnownParkIdAsync()
     {
         var api = CreateApi();
-        var destinations = await api.GetDestinationsAsync();
+        var destinations = await api.GetDestinationsAsync(TestContext.Current.CancellationToken);
 
         var park = destinations?
             .SelectMany(destination => destination.Parks ?? [])
@@ -31,7 +31,7 @@ public class ThemeParksApiIntegrationTests
     {
         var api = CreateApi();
 
-        var destinations = await api.GetDestinationsAsync();
+        var destinations = await api.GetDestinationsAsync(TestContext.Current.CancellationToken);
 
         Assert.NotNull(destinations);
         Assert.NotEmpty(destinations!);
@@ -44,7 +44,7 @@ public class ThemeParksApiIntegrationTests
         var api = CreateApi();
         var parkId = await GetKnownParkIdAsync();
 
-        var entity = await api.GetEntityAsync(parkId);
+        var entity = await api.GetEntityAsync(parkId, TestContext.Current.CancellationToken);
 
         Assert.NotNull(entity);
         Assert.Equal(parkId, entity!.Id);
@@ -57,7 +57,7 @@ public class ThemeParksApiIntegrationTests
         var api = CreateApi();
         var parkId = await GetKnownParkIdAsync();
 
-        var children = await api.GetEntityChildrenAsync(parkId);
+        var children = await api.GetEntityChildrenAsync(parkId, TestContext.Current.CancellationToken);
 
         Assert.NotNull(children);
         Assert.NotEmpty(children!);
@@ -70,7 +70,7 @@ public class ThemeParksApiIntegrationTests
         var api = CreateApi();
         var parkId = await GetKnownParkIdAsync();
 
-        var liveStatus = await api.GetEntityLiveAsync(parkId);
+        var liveStatus = await api.GetEntityLiveAsync(parkId, TestContext.Current.CancellationToken);
 
         Assert.NotNull(liveStatus);
         Assert.False(string.IsNullOrWhiteSpace(liveStatus!.Name));
@@ -82,7 +82,7 @@ public class ThemeParksApiIntegrationTests
         var api = CreateApi();
         var parkId = await GetKnownParkIdAsync();
 
-        var schedule = await api.GetEntityScheduleAsync(parkId);
+        var schedule = await api.GetEntityScheduleAsync(parkId, TestContext.Current.CancellationToken);
 
         Assert.NotNull(schedule);
         Assert.NotNull(schedule!.Entries);
@@ -95,7 +95,7 @@ public class ThemeParksApiIntegrationTests
         var api = CreateApi();
         var parkId = await GetKnownParkIdAsync();
 
-        var schedule = await api.GetEntityScheduleAsync(parkId, 2023, 10);
+        var schedule = await api.GetEntityScheduleAsync(parkId, 2023, 10, TestContext.Current.CancellationToken);
 
         Assert.NotNull(schedule);
         Assert.NotNull(schedule!.Entries);
