@@ -3,6 +3,7 @@ using MagicWise.Desktop.ViewModels;
 using Mapsui;
 using Mapsui.Extensions;
 using Mapsui.Layers;
+using Mapsui.Manipulations;
 using Mapsui.Projections;
 using Mapsui.Styles;
 using Mapsui.Tiling;
@@ -66,13 +67,13 @@ public partial class ParkDetailView : UserControl
         var map = new Map();
         map.Layers.Add(OpenStreetMap.CreateTileLayer());
 
-        _pinLayer = new MemoryLayer { Name = "Pins", Style = null, IsMapInfoLayer = true };
+        _pinLayer = new MemoryLayer { Name = "Pins", Style = null, Tag = true };
         map.Layers.Add(_pinLayer);
 
         // Added after the pin layer so it always renders on top: without this,
         // pins added later to _pinLayer's feature list can paint over an
         // earlier pin's enabled callout.
-        _calloutLayer = new MemoryLayer { Name = "Callout", Style = null, IsMapInfoLayer = false };
+        _calloutLayer = new MemoryLayer { Name = "Callout", Style = null, Tag = false };
         map.Layers.Add(_calloutLayer);
 
         map.Navigator.ViewportChanged += OnViewportChanged;
@@ -300,9 +301,12 @@ public partial class ParkDetailView : UserControl
             Subtitle = subtitle,
             SubtitleFont = { Size = 11 },
             MaxWidth = 220,
-            RectRadius = 6,
-            ShadowWidth = 4,
-            BackgroundColor = Color.FromArgb(240, 34, 34, 34),
+            BalloonDefinition = new CalloutBalloonDefinition
+            {
+                BackgroundColor = Color.FromArgb(240, 34, 34, 34),
+                ShadowWidth = 4,
+                RectRadius = 6
+            },
             TitleFontColor = Color.White,
             SubtitleFontColor = Color.FromArgb(255, 220, 220, 220),
             // Anchors the callout's arrow just above the pin so it doesn't cover it.
@@ -311,10 +315,15 @@ public partial class ParkDetailView : UserControl
         };
     }
 
+    public class LayerData
+    {
+        public bool IsMapInfoLayer { get; set; }
+    }
+
     private void MapControl_MouseMove(object sender, MouseEventArgs e)
     {
         var position = e.GetPosition(MapControl);
-        var mapInfo = MapControl.GetMapInfo(new MPoint(position.X, position.Y), HoverHitTestMargin);
+        var mapInfo = MapControl.GetMapInfo(new ScreenPosition(position.X, position.Y), MapControl.Map.Layers.Where(l => l.Tag is LayerData { IsMapInfoLayer: true }));
         var hoveredFeature = mapInfo?.Feature != null
             && mapInfo.Feature.Styles.OfType<CalloutStyle>().Any()
                 ? mapInfo.Feature
